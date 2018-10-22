@@ -35,9 +35,12 @@ public class CameraControl : MonoBehaviour {
         aimGun = GetComponent<AimGun>();
     }
 
-   
-
     private void Update()
+    {
+        
+    }
+
+    private void FixedUpdate()
     {
         // Move the camera towards a desired position.
         Move();
