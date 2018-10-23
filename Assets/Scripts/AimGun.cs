@@ -31,6 +31,7 @@ public class AimGun : MonoBehaviour {
 
         if (Input.GetAxis("FireLaser") != 0)
         {
+            //Debug.Log(Input.GetAxis("FireLaser"));
             laser.enabled = true;
             ray = new Ray(gunTip.transform.position, gunTip.transform.right);
             
