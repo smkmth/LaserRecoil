@@ -6,26 +6,25 @@ public class Bullet : MonoBehaviour {
 
     public Vector3 Velocity;
     public float speed;
-	
-    
+    public int ignoreLayers;
 
-	// Update is called once per frame
-	void FixedUpdate () {
+
+
+    // Update is called once per frame
+    void FixedUpdate () {
 
         transform.Translate(Velocity * speed * Time.deltaTime);
         
 
 	}
-    private void OnTriggerEnter(Collider collision)
+    public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.layer < 12)
+        ////Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.layer < ignoreLayers)
         {
-            if (collision.transform.gameObject.tag == "Player")
-            {
-                Destroy(collision.gameObject);
-            }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
-       
+
+
     }
 }

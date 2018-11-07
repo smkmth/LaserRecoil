@@ -46,10 +46,19 @@ public class FlyingGuy : MonoBehaviour, IKillable, IDamageable<int> {
 
         if (fireTimer >= fireRate)
         {
-            GameObject instantiatedProjectile = Instantiate(bullet, GunTip.transform.position, GunTip.transform.rotation);
-            instantiatedProjectile.GetComponent<Bullet>().Velocity = transform.TransformDirection(new Vector3(0, 0, 1));
-    
+            GameObject bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
+            
+            if (bullet != null)
+            {
+                bullet.GetComponent<Bullet>().ignoreLayers = 12;
+                bullet.transform.position = GunTip.transform.position;
+                bullet.transform.rotation = GunTip.transform.rotation;
+                bullet.SetActive(true);
+                bullet.GetComponent<Bullet>().Velocity = transform.TransformDirection(new Vector3(0, 0, 1));
+            }
             fireTimer = 0;
+       
+           
 
         }
 
@@ -63,8 +72,7 @@ public class FlyingGuy : MonoBehaviour, IKillable, IDamageable<int> {
 
     public void Kill()
     {
-        Destroy(gameObject);
-        
+        gameObject.SetActive(false);
     }
 
     public void TakeDamage(int damageTaken)
