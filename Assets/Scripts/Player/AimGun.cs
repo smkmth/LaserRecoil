@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AimGun : MonoBehaviour {
 
-    public Vector3 lookDirection;
-    public float deadZone;
+    public Vector3 v3LookDirection;
+    public float fDeadZone;
     public Transform gunTip;
     public LineRenderer laser;
     public Rigidbody rb;
@@ -20,6 +20,13 @@ public class AimGun : MonoBehaviour {
     public float maxRecoil;
     public int damage;
     public PlayerStats playerStats;
+    public enum LaserState
+    {
+        FireLaser1,
+        FireLaser2,
+        NotFiring
+
+    }
 
     private void Start()
     {
@@ -30,7 +37,7 @@ public class AimGun : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Mathf.Abs(Input.GetAxis("RightVert")) > deadZone || Mathf.Abs(Input.GetAxis("RightHoriz")) > deadZone)
+        if (Mathf.Abs(Input.GetAxis("RightVert")) > fDeadZone || Mathf.Abs(Input.GetAxis("RightHoriz")) > fDeadZone)
         {
             gameObject.transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(-Input.GetAxis("RightVert"), Input.GetAxis("RightHoriz")) * 180 / Mathf.PI);
 
@@ -38,7 +45,6 @@ public class AimGun : MonoBehaviour {
 
         if (Input.GetAxis("FireLaser") != 0)
         {
-            //Debug.Log(Input.GetAxis("FireLaser"));
             laser.enabled = true;
             ray = new Ray(gunTip.transform.position, gunTip.transform.right);
             
@@ -69,7 +75,6 @@ public class AimGun : MonoBehaviour {
             }
             else
             {
-
                 laser.SetPosition(1, ray.GetPoint(100));
             }
 
@@ -118,19 +123,24 @@ public class AimGun : MonoBehaviour {
         }
 
 
-        if (Input.GetButton("FireBullet"))
+  
+
+    }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown("FireBullet"))
         {
-            Debug.Log("button");
             GameObject bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
             if (bullet != null)
             {
+                bullet.GetComponent<Bullet>().iaHitLayers.Add(9);
+                bullet.GetComponent<Bullet>().iaHitLayers.Add(12);
                 bullet.transform.position = gunTip.transform.position;
                 bullet.transform.rotation = gunTip.transform.rotation;
                 bullet.SetActive(true);
                 bullet.GetComponent<Bullet>().Velocity = transform.TransformDirection(new Vector3(1, 0, 0));
             }
         }
-
     }
-
 }

@@ -5,60 +5,58 @@ using UnityEngine;
 public class FlyingGuy : MonoBehaviour, IKillable, IDamageable<int> {
 
 
-    public int Health;
-    float Speed;
-    Rigidbody rb;
-    GameObject player;
-    public GameObject gunAxis;
-    public Vector3 lastKnownPosition;
-    public float aimSpeed;
-    Quaternion lookAtRotation;
-    public Transform GunTip;
-    public GameObject bullet;
-    //public Bullet bulletLogic;
-    public float fireRate;
-    public float fireTimer;
-    private bool fireing;
-    public Rigidbody projectile;
+    public int iHealth;
+    float fSpeed;
+    Rigidbody rbBody;
+    GameObject goPlayer;
+    public GameObject goGunAxis;
+    public Vector3 v3LastKnownPosition;
+    public float fAimSpeed;
+    Quaternion qLookAtRotation;
+    public Transform tGunTip;
+    public float fFireRate;
+    public float fFireTimer;
+    private bool bFireing;
+
   
 
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody>();
-        player = GameObject.FindGameObjectWithTag("Player");
+        rbBody = GetComponent<Rigidbody>();
+        goPlayer = GameObject.FindGameObjectWithTag("Player");
         Physics.IgnoreLayerCollision(12, 13, true);
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-		if (Health <= 0)
+		if (iHealth <= 0)
         {
             Kill();
         }
 
-        lastKnownPosition = player.transform.position;
-        lookAtRotation = Quaternion.LookRotation(lastKnownPosition - gunAxis.transform.position,Vector3.forward);
+        v3LastKnownPosition = goPlayer.transform.position;
+        qLookAtRotation = Quaternion.LookRotation(v3LastKnownPosition - goGunAxis.transform.position,Vector3.forward);
 
-        gunAxis.transform.rotation = Quaternion.RotateTowards(gunAxis.transform.rotation, lookAtRotation, aimSpeed * Time.deltaTime);
+        goGunAxis.transform.rotation = Quaternion.RotateTowards(goGunAxis.transform.rotation, qLookAtRotation, fAimSpeed * Time.deltaTime);
 
-        fireTimer += Time.deltaTime;
+        fFireTimer += Time.deltaTime;
 
-        if (fireTimer >= fireRate)
+        if (fFireTimer >= fFireRate)
         {
-            GameObject bullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
+            GameObject m_goBullet = ObjectPooler.SharedInstance.GetPooledObject("Bullet");
             
-            if (bullet != null)
+            if (m_goBullet != null)
             {
-                bullet.GetComponent<Bullet>().ignoreLayers = 12;
-                bullet.transform.position = GunTip.transform.position;
-                bullet.transform.rotation = GunTip.transform.rotation;
-                bullet.SetActive(true);
-                bullet.GetComponent<Bullet>().Velocity = transform.TransformDirection(new Vector3(0, 0, 1));
+                m_goBullet.GetComponent<Bullet>().iaHitLayers.Add(9);
+                m_goBullet.GetComponent<Bullet>().iaHitLayers.Add(11);
+
+                m_goBullet.transform.position = tGunTip.transform.position;
+                m_goBullet.transform.rotation = tGunTip.transform.rotation;
+                m_goBullet.SetActive(true);
+                m_goBullet.GetComponent<Bullet>().Velocity = transform.TransformDirection(new Vector3(0, 0, 1));
             }
-            fireTimer = 0;
-       
-           
+            fFireTimer = 0;
 
         }
 
@@ -77,7 +75,7 @@ public class FlyingGuy : MonoBehaviour, IKillable, IDamageable<int> {
 
     public void TakeDamage(int damageTaken)
     {
-        Health -= damageTaken;
+        iHealth -= damageTaken;
 
     }
 

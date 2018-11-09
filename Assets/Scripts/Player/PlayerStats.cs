@@ -4,25 +4,24 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour, IKillable
 {
-    private RespawnManager respawner;
+    public RespawnManager cptRespawner;
+    //Mutable in the editor 
+    public int iPlayerHealth;
 
-    public int PlayerHealth;
-
-    private int health;
-    public int Health
-    {
+    //actual health value
+    private int m_ihealth;
+    public int m_iHealth
+  {
         get
         {
-            return health;
+            return m_ihealth;
         }
-
         set
         {
-            health = value;
-            if (health <= 0)
+            m_ihealth = value;
+            if (m_ihealth <= 0)
             {
                 Kill();
-
             }
         }
     }
@@ -30,15 +29,12 @@ public class PlayerStats : MonoBehaviour, IKillable
     // Use this for initialization
     void Start () {
 
-        respawner = GetComponent<RespawnManager>();
-        Health = PlayerHealth;
-
-		
+        m_iHealth = iPlayerHealth;
 	}
 	
     public void Kill()
     {
-        respawner.ResetLevel();
+        cptRespawner.ResetLevel();
     }
 
 	// Update is called once per frame
